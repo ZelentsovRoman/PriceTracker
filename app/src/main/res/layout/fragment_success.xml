@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/titleS"
+        android:text="title"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:textSize="14pt"
+        android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/imageS"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/titleS"
+        android:layout_marginTop="40dp"
+        android:layout_width="300dp"
+        android:layout_height="250dp"/>
+    <TextView
+        android:text="Price"
+        android:layout_below="@id/imageS"
+        android:layout_marginTop="40dp"
+        android:textSize="10pt"
+        android:layout_toLeftOf="@id/imageS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="-100dp" />
+    <TextView
+        android:id="@+id/priceS"
+        android:text="Price"
+        android:layout_below="@id/imageS"
+        android:layout_marginTop="40dp"
+        android:textSize="10pt"
+        android:layout_toRightOf="@id/imageS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-100dp" />
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
