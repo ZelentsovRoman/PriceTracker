@@ -138,7 +138,6 @@ public class Success extends Fragment implements View.OnClickListener {
         }
     };
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -182,7 +181,6 @@ public class Success extends Fragment implements View.OnClickListener {
 
     public static void addSomeDataOutsideOfRoom(String tableName, String url, String title, String price, String image, String date, AppDatabase mDB) {
         SupportSQLiteDatabase sdb = mDB.getOpenHelper().getWritableDatabase();
-        if (BaseEntity.getTableRowCount(sdb,tableName) > 0) return;
         BaseEntity.insertRow(sdb,tableName,url,title,price,date,image);
     }
     public static BaseEntity getLast(String tableName, AppDatabase mDB) {

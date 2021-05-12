@@ -15,7 +15,7 @@ public class MyReceiver extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
+        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED) || intent.getAction().equals("restart")) {
             JobInfo job = new JobInfo.Builder(11, new ComponentName(context, Service.class))
                     .setBackoffCriteria(1000*60*10,JobInfo.BACKOFF_POLICY_LINEAR)
                     .setPeriodic(1000 * 60 * 60)

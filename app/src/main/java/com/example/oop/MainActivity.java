@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.oop.service.MyReceiver;
+
 public class MainActivity extends AppCompatActivity implements Application.ActivityLifecycleCallbacks {
     private static int activityCount = 0;
     public NavController navController;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Application.Activ
             }
         }
         if (!hasBeenScheduled){
+            new MyReceiver().onReceive(this,getIntent().setAction("restart"));
         }
         super.onDestroy();
     }

@@ -143,10 +143,8 @@ public class BaseEntity {
     @Ignore
     public static int getTableRowCount(SupportSQLiteDatabase sdb,String tableName) {
         int rv = 0;
-        Cursor csr = sdb.query("SELECT COUNT() FROM " + tableName,null);
-        if (csr.moveToFirst()) {
-            rv = csr.getInt(0);
-        }
+        Cursor csr = sdb.query("SELECT * FROM " + tableName,null);
+        rv = csr.getCount();
         csr.close();
         return rv;
     }

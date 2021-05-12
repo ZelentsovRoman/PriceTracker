@@ -20,6 +20,7 @@ import androidx.room.Room;
 import com.example.oop.MainActivity;
 import com.example.oop.R;
 import com.example.oop.db.AppDatabase;
+import com.example.oop.db.BaseEntity;
 import com.example.oop.db.Product;
 import com.example.oop.db.ProductsDao;
 import com.example.oop.fragments.Success;
@@ -65,9 +66,12 @@ public class Service extends JobService {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (!prod.price.equals(newProd.price)) {
+                String dynamicTableName = "["+url+"]";
+                Success.addTable(dynamicTableName, database);
+                BaseEntity model = Success.getLast(dynamicTableName,database);
+                String dateModel = model.getDate();
+                if (!prod.price.equals(newProd.price) || !dateModel.equals(formattedDate)) {
                     status=1;
-                    String dynamicTableName = "["+newProd.Url+"]";
                     Success.addTable(dynamicTableName, database);
                     Success.addSomeDataOutsideOfRoom(dynamicTableName, newProd.Url, newProd.title, newProd.price, newProd.image, formattedDate,database);
                     productsDao.updateProduct(newProd);
@@ -77,7 +81,7 @@ public class Service extends JobService {
                 sendNotification(this);
                 Log.v("myLog","service end work in background");
             }
-            else Log.v("myLog","service end work in background");
+            else Log.v("myLog","service end work in foreground");
             return true;
 
         } else return false;
