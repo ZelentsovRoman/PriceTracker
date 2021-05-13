@@ -38,6 +38,7 @@ import com.example.oop.service.Service;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -146,7 +147,6 @@ public class Success extends Fragment implements View.OnClickListener {
                     editText.setVisibility(View.VISIBLE);
                     add.setVisibility(View.VISIBLE);
                     textlink.setVisibility(View.VISIBLE);
-                    editText.setText("https://www.dns-shop.ru/product/0c4f467b173c3332/elektrosamokat-dexp-kid-goluboj/");
                 }
                 else {
                     editText.setVisibility(View.GONE);
@@ -160,8 +160,15 @@ public class Success extends Fragment implements View.OnClickListener {
                 if (!productsDao.getByUrl(editText.getText().toString()).isEmpty()){
                     Toast.makeText(this.getActivity(),"Product already added", Toast.LENGTH_LONG).show();
                 } else {
-                    AddProduct addProduct = new AddProduct();
-                    addProduct.execute();
+                    if (editText.getText().toString().contains("citilink")){
+                        AddCTProduct addCTProduct = new AddCTProduct();
+                        addCTProduct.execute();
+                    } else if (editText.getText().toString().contains("dns-shop")){
+                        AddDNSProduct addDNSProduct = new AddDNSProduct();
+                        addDNSProduct.execute();
+                    } else {
+                        Toast.makeText(this.getActivity(),"Invalid link", Toast.LENGTH_LONG).show();
+                    }
                 }
                 editText.setVisibility(View.GONE);
                 add.setVisibility(View.GONE);
@@ -173,6 +180,15 @@ public class Success extends Fragment implements View.OnClickListener {
         SupportSQLiteDatabase sdb = mDB.getOpenHelper().getWritableDatabase();
         try {
             sdb.execSQL(BaseEntity.BASETABLE_CREATE_SQL.replace(BaseEntity.BASETABLE_NAME_PLACEHOLDER, tableName));
+        } catch (SQLiteException e) {
+            return false;
+        }
+        return true;
+    }
+    public static boolean deleteTable(String tableName, AppDatabase mDB) {
+        SupportSQLiteDatabase sdb = mDB.getOpenHelper().getWritableDatabase();
+        try {
+            sdb.execSQL(BaseEntity.BASETABLE_DELETE_SQL.replace(BaseEntity.BASETABLE_NAME_PLACEHOLDER, tableName));
         } catch (SQLiteException e) {
             return false;
         }
@@ -196,7 +212,7 @@ public class Success extends Fragment implements View.OnClickListener {
         return BaseEntity.getPrices(sdb,tableName);
     }
 
-    public class AddProduct extends AsyncTask<Void, Void, Boolean> {
+    public class AddDNSProduct extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
             Document doc = null;
@@ -249,6 +265,56 @@ public class Success extends Fragment implements View.OnClickListener {
                 productsDao = database.productsDao();
                 List<Product> arrayList = productsDao.getProducts();
                 adapter.set(arrayList);
+                editText.getText().clear();
+            }
+            else Toast.makeText(getContext(), "Failed to add new product", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public class AddCTProduct extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Document doc = null;
+            try {
+                doc = Jsoup.connect(editText.getText().toString()).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                Product product = new Product();
+                product.Url = editText.getText().toString();
+                product.title=doc.getElementsByClass("Heading Heading_level_1 ProductHeader__title").first().text();
+                product.price=doc.getElementsByClass("ProductHeader__price-default_current-price ").first().text();
+                product.image=doc.getElementsByClass(" PreviewList__image Image").attr("src");
+                if (product.price != null && product.title != null && product.image != null) {
+                    productsDao.insert(product);
+                    Date c = Calendar.getInstance().getTime();
+                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                    String formattedDate = df.format(c);
+                    String dynamicTableName = "["+product.Url+"]";
+                    addTable(dynamicTableName, database);
+                    addSomeDataOutsideOfRoom(dynamicTableName, product.Url, product.title, product.price, product.image, formattedDate,database);
+                    return true;
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IllegalStateException e){
+                e.printStackTrace();
+                return false;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                Toast.makeText(getContext(), "Product added", Toast.LENGTH_SHORT).show();
+                database = getDatabase();
+                productsDao = database.productsDao();
+                List<Product> arrayList = productsDao.getProducts();
+                adapter.set(arrayList);
+                editText.getText().clear();
             }
             else Toast.makeText(getContext(), "Failed to add new product", Toast.LENGTH_SHORT).show();
         }

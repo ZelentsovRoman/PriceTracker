@@ -56,15 +56,27 @@ public class Service extends JobService {
         if (isNetworkConnected()) {
             for(Product prod : productArrayList) {
                 url = prod.Url;
-                MyTask myTask = new MyTask();
-                myTask.execute();
                 Product newProd = new Product();
-                try {
-                    newProd = myTask.get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (url.contains("citilink")){
+                    MyTask1 myTask1 = new MyTask1();
+                    myTask1.execute();
+                    try {
+                        newProd = myTask1.get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else if (url.contains("dns-shop")){
+                    MyTask myTask = new MyTask();
+                    myTask.execute();
+                    try {
+                        newProd = myTask.get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 String dynamicTableName = "["+url+"]";
                 Success.addTable(dynamicTableName, database);
@@ -143,6 +155,26 @@ public class Service extends JobService {
             m = p.matcher(script.html());
             m.find();
             product.image = m.group(1);
+            if (product.price != null && product.title != null && product.image != null) {
+                return product;
+            }
+            else return null;
+        }
+    }
+    public class MyTask1 extends AsyncTask<Void, Void, Product> {
+        @Override
+        protected Product doInBackground(Void... params) {
+            Document doc = null;
+            try {
+                doc = Jsoup.connect(url).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Product product = new Product();
+            product.Url = url;
+            product.title=doc.getElementsByClass("Heading Heading_level_1 ProductHeader__title").first().text();
+            product.price=doc.getElementsByClass("ProductHeader__price-default_current-price ").first().text();
+            product.image=doc.getElementsByClass(" PreviewList__image Image").attr("src");
             if (product.price != null && product.title != null && product.image != null) {
                 return product;
             }

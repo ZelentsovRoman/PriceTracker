@@ -27,6 +27,7 @@ public class BaseEntity {
     public static final String BASETABLE_CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + BASETABLE_NAME_PLACEHOLDER
             + "("+BASETABLE_COL_ID+" INTEGER PRIMARY KEY, "+ BASETABLE_COL_URL + " TEXT, " + BASETABLE_COL_TITLE + " TEXT, "+ BASETABLE_COL_IMAGE + " TEXT, "
             + BASETABLE_COL_PRICE + " TEXT, "+ BASETABLE_COL_DATE + " TEXT)";
+    public static final String BASETABLE_DELETE_SQL = "DROP TABLE IF EXISTS " + BASETABLE_NAME_PLACEHOLDER+";";
     @PrimaryKey
     @ColumnInfo(name = BASETABLE_COL_ID)
     Long id;

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.Product">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <TextView
         android:id="@+id/titlePage"
         android:text="title"
@@ -56,4 +60,47 @@
             android:layout_height="200dp"
             />
     </HorizontalScrollView>
-</RelativeLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/delete"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_below="@id/horizontalScrollViewFloat"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:foreground="@drawable/ic_baseline_delete_24"
+        android:foregroundGravity="center"
+        app:backgroundTint="#939191" />
+        <TextView
+            android:id="@+id/text"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/delete"
+            android:textColor="#4d4d4d"
+            android:text="Delete this product?"
+            android:textSize="14dp"
+            />
+        <Button
+            android:id="@+id/yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/text"
+            android:layout_toLeftOf="@id/text"
+            android:layout_marginRight="-30dp"
+            android:text="Yes"
+            android:textAllCaps="false" />
+        <Button
+            android:id="@+id/no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@id/text"
+            android:layout_marginLeft="-30dp"
+            android:layout_below="@id/text"
+            android:text="No"
+            android:textAllCaps="false" />
+    </RelativeLayout>
+</ScrollView>

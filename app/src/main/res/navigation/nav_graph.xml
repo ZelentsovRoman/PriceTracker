@@ -25,5 +25,8 @@
             android:name="url"
             app:argType="string"
             android:defaultValue="url" />
+        <action
+            android:id="@+id/action_product_to_success2"
+            app:destination="@id/success" />
     </fragment>
 </navigation>
