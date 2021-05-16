@@ -108,7 +108,6 @@ public class Success extends Fragment implements View.OnClickListener {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onRefresh() {
-            swipeContainer.setRefreshing(true);
             Handler handler = new Handler() {
                 public void handleMessage(android.os.Message msg) {
                     if (msg.what == 10) {
@@ -119,6 +118,7 @@ public class Success extends Fragment implements View.OnClickListener {
                 };
             };
             if (isNetworkConnected(getActivity())) {
+                swipeContainer.setRefreshing(true);
                 new Thread(new Runnable() {
                     public void run() {
                         Service.getData(getActivity());
