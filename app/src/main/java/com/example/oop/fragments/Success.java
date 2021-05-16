@@ -1,9 +1,4 @@
 package com.example.oop.fragments;
-
-import android.annotation.SuppressLint;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 import android.net.ConnectivityManager;
@@ -11,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +34,6 @@ import com.example.oop.service.Service;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -54,9 +49,8 @@ public class Success extends Fragment implements View.OnClickListener {
     FloatingActionButton plus;
     public EditText editText;
     public TextView textlink;
-    private SwipeRefreshLayout swipeContainer;
-    private ArrayList<Product>  arrayList = new ArrayList<>();
-    private DataAdapter adapter;
+    public static SwipeRefreshLayout swipeContainer;
+    public DataAdapter adapter;
     RecyclerView recyclerView;
     private AppDatabase database;
     public ProductsDao productsDao;
@@ -93,8 +87,6 @@ public class Success extends Fragment implements View.OnClickListener {
         swipeContainer = view.findViewById(R.id.swipeRefreshLayout);
         swipeContainer.setOnRefreshListener(swipe);
         if(isNetworkConnected(getContext())) {
-            database = getDatabase();
-            productsDao = database.productsDao();
             List<Product> arrayList = productsDao.getProducts();
             adapter.set(arrayList);
             if (status==0) {
@@ -102,8 +94,6 @@ public class Success extends Fragment implements View.OnClickListener {
                 status++;
             }
         } else {
-            database = getDatabase();
-            productsDao = database.productsDao();
             List<Product> arrayList = productsDao.getProducts();
             adapter.set(arrayList);
             Toast.makeText(Success.this.getActivity(), "No internet connection!", Toast.LENGTH_SHORT).show();
@@ -115,27 +105,30 @@ public class Success extends Fragment implements View.OnClickListener {
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
     SwipeRefreshLayout.OnRefreshListener swipe = new SwipeRefreshLayout.OnRefreshListener(){
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onRefresh() {
             swipeContainer.setRefreshing(true);
-            new Handler().postDelayed(new Runnable() {
-                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                @Override
-                public void run() {
-                    if (isNetworkConnected(getContext())) {
-                        JobInfo job = new JobInfo.Builder(1, new ComponentName(getContext(), Service.class)).build();
-                        JobScheduler scheduler = (JobScheduler) getContext().getSystemService(Context.JOB_SCHEDULER_SERVICE);
-                        scheduler.schedule(job);
-                        database = getDatabase();
-                        productsDao = database.productsDao();
+            Handler handler = new Handler() {
+                public void handleMessage(android.os.Message msg) {
+                    if (msg.what == 10) {
                         List<Product> arrayList = productsDao.getProducts();
                         adapter.set(arrayList);
-                    } else {
-                        Toast.makeText(Success.this.getActivity(), "No internet connection!", Toast.LENGTH_SHORT).show();
+                        swipeContainer.setRefreshing(false);
                     }
-                    swipeContainer.setRefreshing(false);
-                }
-            }, 3000);
+                };
+            };
+            if (isNetworkConnected(getActivity())) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        Service.getData(getActivity());
+                        handler.sendEmptyMessage(10);
+                    }
+                }).start();
+            } else {
+                Toast.makeText(Success.this.getActivity(), "No internet connection!", Toast.LENGTH_SHORT).show();
+                swipeContainer.setRefreshing(false);
+            }
         }
     };
 

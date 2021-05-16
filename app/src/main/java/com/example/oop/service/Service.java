@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -31,6 +30,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -40,24 +40,30 @@ import java.util.regex.Pattern;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Service extends JobService {
-    private AppDatabase database;
-    public ProductsDao productsDao;
+    private static AppDatabase database;
+    public static ProductsDao productsDao;
     public static String url;
     public static int status;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        database = Room.databaseBuilder(this, AppDatabase.class, "prodDB.db").allowMainThreadQueries().build();
+        return getData(this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static boolean getData(Context context) {
+        database = Room.databaseBuilder(context, AppDatabase.class, "prodDB.db").allowMainThreadQueries().build();
         productsDao = database.productsDao();
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String formattedDate = df.format(c);
         List<Product> productArrayList = productsDao.getProducts();
-        if (isNetworkConnected()) {
-            for(Product prod : productArrayList) {
+        boolean stat = false;
+        if (isNetworkConnected(context)) {
+            for (Product prod : productArrayList) {
                 url = prod.Url;
                 Product newProd = new Product();
-                if (url.contains("citilink")){
+                if (url.contains("citilink")) {
                     MyTask1 myTask1 = new MyTask1();
                     myTask1.execute();
                     try {
@@ -67,7 +73,7 @@ public class Service extends JobService {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                } else if (url.contains("dns-shop")){
+                } else if (url.contains("dns-shop")) {
                     MyTask myTask = new MyTask();
                     myTask.execute();
                     try {
@@ -78,25 +84,22 @@ public class Service extends JobService {
                         e.printStackTrace();
                     }
                 }
-                String dynamicTableName = "["+url+"]";
+                String dynamicTableName = "[" + url + "]";
                 Success.addTable(dynamicTableName, database);
-                BaseEntity model = Success.getLast(dynamicTableName,database);
+                BaseEntity model = Success.getLast(dynamicTableName, database);
                 String dateModel = model.getDate();
                 if (!prod.price.equals(newProd.price) || !dateModel.equals(formattedDate)) {
-                    status=1;
+                    status = 1;
                     Success.addTable(dynamicTableName, database);
-                    Success.addSomeDataOutsideOfRoom(dynamicTableName, newProd.Url, newProd.title, newProd.price, newProd.image, formattedDate,database);
+                    Success.addSomeDataOutsideOfRoom(dynamicTableName, newProd.Url, newProd.title, newProd.price, newProd.image, formattedDate, database);
                     productsDao.updateProduct(newProd);
                 }
             }
-            if (!MainActivity.isAppForeground()&&status!=0) {
-                sendNotification(this);
-                Log.v("myLog","service end work in background");
+            if (!MainActivity.isAppForeground() && status != 0) {
+                sendNotification(context);
+                stat=true;
             }
-            else Log.v("myLog","service end work in foreground");
-            return true;
-
-        } else return false;
+        } return stat;
     }
 
     @Override
@@ -104,8 +107,8 @@ public class Service extends JobService {
         return false;
     }
 
-    private boolean isNetworkConnected(){
-        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+    private static boolean isNetworkConnected(Context context){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
@@ -132,7 +135,7 @@ public class Service extends JobService {
         notificationManager.notify(56, notificationBuilder.build());
     }
 
-    public class MyTask extends AsyncTask<Void, Void, Product> {
+    public static class MyTask extends AsyncTask<Void, Void, Product> {
         @Override
         protected Product doInBackground(Void... params) {
             Document doc = null;
@@ -161,7 +164,7 @@ public class Service extends JobService {
             else return null;
         }
     }
-    public class MyTask1 extends AsyncTask<Void, Void, Product> {
+    public static class MyTask1 extends AsyncTask<Void, Void, Product> {
         @Override
         protected Product doInBackground(Void... params) {
             Document doc = null;

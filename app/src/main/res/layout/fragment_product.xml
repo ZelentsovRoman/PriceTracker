@@ -68,12 +68,12 @@
         android:layout_below="@id/horizontalScrollViewFloat"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:foreground="@drawable/ic_baseline_delete_24"
         android:foregroundGravity="center"
         app:backgroundTint="#939191" />
         <TextView
             android:id="@+id/text"
-            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -90,6 +90,7 @@
             android:layout_below="@id/text"
             android:layout_toLeftOf="@id/text"
             android:layout_marginRight="-30dp"
+            android:layout_marginBottom="20dp"
             android:text="Yes"
             android:textAllCaps="false" />
         <Button
@@ -100,6 +101,7 @@
             android:layout_toRightOf="@id/text"
             android:layout_marginLeft="-30dp"
             android:layout_below="@id/text"
+            android:layout_marginBottom="20dp"
             android:text="No"
             android:textAllCaps="false" />
     </RelativeLayout>
