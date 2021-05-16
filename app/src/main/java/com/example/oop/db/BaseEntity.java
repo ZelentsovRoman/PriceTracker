@@ -25,20 +25,25 @@ public class BaseEntity {
     public static final String BASETABLE_COL_DATE = "date";
     public static final String BASETABLE_NAME_PLACEHOLDER = ":tablename:";
     public static final String BASETABLE_CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + BASETABLE_NAME_PLACEHOLDER
-            + "("+BASETABLE_COL_ID+" INTEGER PRIMARY KEY, "+ BASETABLE_COL_URL + " TEXT, " + BASETABLE_COL_TITLE + " TEXT, "+ BASETABLE_COL_IMAGE + " TEXT, "
-            + BASETABLE_COL_PRICE + " TEXT, "+ BASETABLE_COL_DATE + " TEXT)";
+            + "("+BASETABLE_COL_ID+" INTEGER PRIMARY KEY, "+ BASETABLE_COL_URL + " TEXT NOT NULL, " + BASETABLE_COL_TITLE + " TEXT NOT NULL, "+ BASETABLE_COL_IMAGE + " TEXT NOT NULL, "
+            + BASETABLE_COL_PRICE + " TEXT NOT NULL, "+ BASETABLE_COL_DATE + " TEXT NOT NULL)";
     public static final String BASETABLE_DELETE_SQL = "DROP TABLE IF EXISTS " + BASETABLE_NAME_PLACEHOLDER+";";
     @PrimaryKey
     @ColumnInfo(name = BASETABLE_COL_ID)
     Long id;
+    @NotNull
     @ColumnInfo(name = BASETABLE_COL_URL)
     String url;
+    @NotNull
     @ColumnInfo(name = BASETABLE_COL_TITLE)
     String title;
+    @NotNull
     @ColumnInfo(name = BASETABLE_COL_IMAGE)
     String image;
+    @NotNull
     @ColumnInfo(name = BASETABLE_COL_PRICE)
     String price;
+    @NotNull
     @ColumnInfo(name = BASETABLE_COL_DATE)
     String date;
 
@@ -139,14 +144,5 @@ public class BaseEntity {
             }
         }
         return arrayList;
-    }
-
-    @Ignore
-    public static int getTableRowCount(SupportSQLiteDatabase sdb,String tableName) {
-        int rv = 0;
-        Cursor csr = sdb.query("SELECT * FROM " + tableName,null);
-        rv = csr.getCount();
-        csr.close();
-        return rv;
     }
 }

@@ -10,7 +10,10 @@ public class Product {
     @PrimaryKey
     @NotNull
     public String Url;
+    @NotNull
     public String title;
+    @NotNull
     public String image;
+    @NotNull
     public String price;
 }

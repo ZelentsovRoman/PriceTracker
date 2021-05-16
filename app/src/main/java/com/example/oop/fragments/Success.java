@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ public class Success extends Fragment implements View.OnClickListener {
     private AppDatabase database;
     public ProductsDao productsDao;
     public int status = 0;
+    public ScrollView scrollView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +82,7 @@ public class Success extends Fragment implements View.OnClickListener {
         add = view.findViewById(R.id.addNew);
         add.setOnClickListener(this);
         add.setVisibility(View.GONE);
+        scrollView = view.findViewById(R.id.scrollView);
         textlink = view.findViewById(R.id.textlink);
         textlink.setVisibility(View.GONE);
         editText = view.findViewById(R.id.url);
@@ -137,6 +140,12 @@ public class Success extends Fragment implements View.OnClickListener {
         switch (v.getId()){
             case R.id.plus: {
                 if (editText.getVisibility()==View.GONE) {
+                    scrollView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    },100);
                     editText.setVisibility(View.VISIBLE);
                     add.setVisibility(View.VISIBLE);
                     textlink.setVisibility(View.VISIBLE);
@@ -154,9 +163,11 @@ public class Success extends Fragment implements View.OnClickListener {
                     Toast.makeText(this.getActivity(),"Product already added", Toast.LENGTH_LONG).show();
                 } else {
                     if (editText.getText().toString().contains("citilink")){
+                        swipeContainer.setRefreshing(true);
                         AddCTProduct addCTProduct = new AddCTProduct();
                         addCTProduct.execute();
                     } else if (editText.getText().toString().contains("dns-shop")){
+                        swipeContainer.setRefreshing(true);
                         AddDNSProduct addDNSProduct = new AddDNSProduct();
                         addDNSProduct.execute();
                     } else {
@@ -259,6 +270,7 @@ public class Success extends Fragment implements View.OnClickListener {
                 List<Product> arrayList = productsDao.getProducts();
                 adapter.set(arrayList);
                 editText.getText().clear();
+                swipeContainer.setRefreshing(false);
             }
             else Toast.makeText(getContext(), "Failed to add new product", Toast.LENGTH_SHORT).show();
         }
@@ -308,6 +320,7 @@ public class Success extends Fragment implements View.OnClickListener {
                 List<Product> arrayList = productsDao.getProducts();
                 adapter.set(arrayList);
                 editText.getText().clear();
+                swipeContainer.setRefreshing(false);
             }
             else Toast.makeText(getContext(), "Failed to add new product", Toast.LENGTH_SHORT).show();
         }
