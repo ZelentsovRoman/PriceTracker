@@ -22,12 +22,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:layout_centerHorizontal="true"
             android:foreground="@drawable/ic_round_add_24"
             app:backgroundTint="#939191" />
         <TextView
             android:id="@+id/textlink"
-            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -40,6 +40,7 @@
         android:layout_width="match_parent"
         android:layout_marginLeft="50dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/textlink"
         android:layout_centerInParent="true"
         android:ems="10"
@@ -51,7 +52,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/url"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:text="Add new product"
+            android:layout_marginBottom="20dp"
             android:textAllCaps="false" />
     </RelativeLayout>
     </ScrollView>
