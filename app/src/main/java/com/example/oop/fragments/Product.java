@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class Product extends Fragment implements View.OnClickListener{
     TextView text;
     Button yes,no;
     FloatingActionButton delete;
+    HorizontalScrollView horizontalScrollView;
     public String name;
     public String del;
     @Override
@@ -68,6 +70,13 @@ public class Product extends Fragment implements View.OnClickListener{
         ArrayList<ArrayList<Integer>> arrayLists = new ArrayList<>();
         arrayLists.add(Success.getPrices(name,database));
         lineView.setDataList(arrayLists);
+        horizontalScrollView = view.findViewById(R.id.horizontalScrollViewFloat);
+        horizontalScrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                horizontalScrollView.fullScroll(View.FOCUS_RIGHT);
+            }
+        },100);
         delete = view.findViewById(R.id.delete);
         delete.setOnClickListener(this);
         yes = view.findViewById(R.id.yes);
