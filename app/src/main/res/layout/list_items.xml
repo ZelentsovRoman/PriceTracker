@@ -39,16 +39,17 @@
             android:textColor="#4d4d4d"
             android:text="Enter link on product:"
             />
-    <EditText
-        android:id="@+id/url"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/textlink"
-        android:layout_centerInParent="true"
-        android:ems="10"
-        android:inputType="text" />
+
+        <EditText
+            android:id="@+id/url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textlink"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:inputType="text" />
 
         <Button
             android:id="@+id/addNew"
