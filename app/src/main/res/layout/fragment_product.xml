@@ -18,13 +18,14 @@
             android:layout_marginTop="30dp"
             android:text="title"
             android:textSize="10pt" />
-    <ImageView
-        android:id="@+id/imagePrice"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/titlePage"
-        android:layout_marginTop="30dp"
-        android:layout_width="300dp"
-        android:layout_height="250dp"/>
+
+        <ImageView
+            android:id="@+id/imagePrice"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_below="@id/titlePage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp" />
     <TextView
         android:text="Price"
         android:layout_below="@id/imagePrice"
@@ -44,23 +45,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="-100dp" />
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollViewFloat"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pricePage"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_alignParentRight="true"
-        >
-        <view
-            class="im.dacer.androidcharts.LineView"
-            android:id="@+id/line_view"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            />
-    </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollViewFloat"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pricePage"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="20dp"
+            android:background="#CACACA">
+
+            <view
+                android:id="@+id/line_view"
+                class="im.dacer.androidcharts.LineView"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp" />
+        </HorizontalScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/delete"

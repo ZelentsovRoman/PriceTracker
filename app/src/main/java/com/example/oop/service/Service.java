@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -89,10 +90,14 @@ public class Service extends JobService {
                 BaseEntity model = Success.getLast(dynamicTableName, database);
                 String dateModel = model.getDate();
                 if (!prod.price.equals(newProd.price) || !dateModel.equals(formattedDate)) {
-                    status = 1;
-                    Success.addTable(dynamicTableName, database);
-                    Success.addSomeDataOutsideOfRoom(dynamicTableName, newProd.Url, newProd.title, newProd.price, newProd.image, formattedDate, database);
-                    productsDao.updateProduct(newProd);
+                    try {
+                        status = 1;
+                        Success.addTable(dynamicTableName, database);
+                        Success.addSomeDataOutsideOfRoom(dynamicTableName, newProd.Url, newProd.title, newProd.price, newProd.image, formattedDate, database);
+                        productsDao.updateProduct(newProd);
+                    } catch (InternalError error){
+                        Toast.makeText(context,"Integral error", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
             if (!MainActivity.isAppForeground() && status != 0) {
