@@ -90,14 +90,10 @@ public class Service extends JobService {
                 BaseEntity model = Success.getLast(dynamicTableName, database);
                 String dateModel = model.getDate();
                 if (!prod.price.equals(newProd.price) || !dateModel.equals(formattedDate)) {
-                    try {
-                        status = 1;
-                        Success.addTable(dynamicTableName, database);
-                        Success.addSomeDataOutsideOfRoom(dynamicTableName, newProd.Url, newProd.title, newProd.price, newProd.image, formattedDate, database);
-                        productsDao.updateProduct(newProd);
-                    } catch (InternalError error){
-                        Toast.makeText(context,"Integral error", Toast.LENGTH_SHORT).show();
-                    }
+                    status = 1;
+                    Success.addTable(dynamicTableName, database);
+                    Success.addSomeDataOutsideOfRoom(dynamicTableName, newProd.Url, newProd.title, newProd.price, newProd.image, formattedDate, database);
+                    productsDao.updateProduct(newProd);
                 }
             }
             if (!MainActivity.isAppForeground() && status != 0) {
