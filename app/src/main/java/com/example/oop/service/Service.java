@@ -176,7 +176,7 @@ public class Service extends JobService {
             Product product = new Product();
             product.Url = url;
             product.title=doc.getElementsByClass("Heading Heading_level_1 ProductHeader__title").first().text();
-            product.price=doc.getElementsByClass("ProductHeader__price-default_current-price ").first().text();
+            product.price=doc.getElementsByClass("ProductHeader__price-default_current-price js--ProductHeader__price-default_current-price ").first().text();
             product.image=doc.getElementsByClass(" PreviewList__image Image").attr("src");
             if (product.price != null && product.title != null && product.image != null) {
                 return product;

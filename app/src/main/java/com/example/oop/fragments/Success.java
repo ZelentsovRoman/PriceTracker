@@ -270,9 +270,9 @@ public class Success extends Fragment implements View.OnClickListener {
                 List<Product> arrayList = productsDao.getProducts();
                 adapter.set(arrayList);
                 editText.getText().clear();
-                swipeContainer.setRefreshing(false);
             }
             else Toast.makeText(getContext(), "Failed to add new product", Toast.LENGTH_SHORT).show();
+            swipeContainer.setRefreshing(false);
         }
     }
     public class AddCTProduct extends AsyncTask<Void, Void, Boolean> {
@@ -288,7 +288,7 @@ public class Success extends Fragment implements View.OnClickListener {
                 Product product = new Product();
                 product.Url = editText.getText().toString();
                 product.title=doc.getElementsByClass("Heading Heading_level_1 ProductHeader__title").first().text();
-                product.price=doc.getElementsByClass("ProductHeader__price-default_current-price ").first().text();
+                product.price=doc.getElementsByClass("ProductHeader__price-default_current-price js--ProductHeader__price-default_current-price ").first().text();
                 product.image=doc.getElementsByClass(" PreviewList__image Image").attr("src");
                 if (product.price != null && product.title != null && product.image != null) {
                     productsDao.insert(product);
@@ -320,9 +320,9 @@ public class Success extends Fragment implements View.OnClickListener {
                 List<Product> arrayList = productsDao.getProducts();
                 adapter.set(arrayList);
                 editText.getText().clear();
-                swipeContainer.setRefreshing(false);
             }
             else Toast.makeText(getContext(), "Failed to add new product", Toast.LENGTH_SHORT).show();
+            swipeContainer.setRefreshing(false);
         }
     }
 }
